@@ -1,0 +1,10 @@
+name: 实时金价面板
+desc: 显示AU9999金价、国际金价和离岸汇率折合金价的面板。从指定网页抓取实时数据。
+tiles:
+  - name: GoldPriceTile
+    icon: dollarsign.circle.fill
+    backgroundColor: #FFD700
+    argument: url=https://i.jzj9999.com/quoteh5/
+script-providers:
+  GoldPriceTile:
+    url: file://gold_price.js
