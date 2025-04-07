@@ -8,3 +8,4 @@ tiles:
 script-providers:
   GoldPriceTile:
     url: https://raw.githubusercontent.com/Phil2048/golden/refs/heads/main/golden.js
+    interval: 86400
