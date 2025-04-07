@@ -1,10 +1,10 @@
 name: 实时金价面板
-desc: 显示AU9999金价、国际金价和离岸汇率折合金价的面板。从指定网页抓取实时数据。
+desc: 显示AU9999金价（克）、伦敦金（盎司）和离岸金价（克）的面板。从极速API抓取实时数据。
 tiles:
   - name: GoldPriceTile
     icon: dollarsign.circle.fill
     backgroundColor: #FFD700
-    argument: url=https://i.jzj9999.com/quoteh5/
+    argument: appkey=99ab4e7be6afc6a1
 script-providers:
   GoldPriceTile:
-    url: https://raw.githubusercontent.com/Phil2048/golden/refs/heads/main/golden.js
+    url: file://gold_price.js
