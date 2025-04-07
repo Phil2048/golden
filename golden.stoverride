@@ -7,4 +7,4 @@ tiles:
     argument: appkey=99ab4e7be6afc6a1
 script-providers:
   GoldPriceTile:
-    url: file://gold_price.js
+    url: https://raw.githubusercontent.com/Phil2048/golden/refs/heads/main/golden.js
