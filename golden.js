@@ -68,7 +68,7 @@ function fetchXAU() {
 function fetchExchangeRate() {
   $httpClient.get(
     {
-      url: `https://api.jisuapi.com/exchange/convert?appkey=${appkey}&from=USD&to=CNY&amount=1`, // 显式附加 appkey
+      url: `https://api.jisuapi.com/exchange/convert?appkey=${appkey}&from=USD&to=CNH&amount=1`, // 显式附加 appkey
       headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" }
     },
     function (error, response, data) {
