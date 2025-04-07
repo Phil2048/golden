@@ -3,26 +3,36 @@ console.log(`[${$script.name}] Starting at ${$script.startTime}, Type: ${$script
 const appkey = $argument.split("appkey=")[1] || "99ab4e7be6afc6a1";
 let au9999Price, xauPrice, exchangeRate;
 
+// 检查数据是否需要解析
+function parseData(data) {
+  return typeof data === "string" ? JSON.parse(data) : data;
+}
+
 // 获取 AU9999 金价（人民币/克）
 $httpClient.get(
   {
     url: "https://api.jisuapi.com/gold/shgold",
-    url: "https://api.jisuapi.com/gold/london?appkey=99ab4e7be6afc6a1",
     headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" },
     params: { appkey }
   },
   function (error, response, data) {
-    console.log("AU9999 Response:", data); // 调试：打印完整响应
-    if (error || JSON.parse(data).status !== 0) {
-      console.log(`AU9999 fetch error: ${error || JSON.parse(data).msg}`);
+    console.log("AU9999 Raw Data:", data); // 调试：打印原始数据
+    if (error) {
+      console.log(`AU9999 fetch error: ${error}`);
       au9999Price = "2000.50";
     } else {
-      const result = JSON.parse(data).result;
-      console.log("AU9999 Result:", result); // 调试：打印 result 数组
-      const au9999Data = result.find(item => item.type === "AU99.99");
-      console.log("AU9999 Found:", au9999Data); // 调试：打印找到的项
-      au9999Price = au9999Data ? au9999Data.price : "2000.50";
-      console.log(`AU9999: ¥${au9999Price}/g`);
+      const parsedData = parseData(data);
+      console.log("AU9999 Parsed Data:", parsedData); // 调试：打印解析后数据
+      if (parsedData.status !== 0) {
+        console.log(`AU9999 API error: ${parsedData.status}-${parsedData.msg}`);
+        au9999Price = "2000.50";
+      } else {
+        const result = parsedData.result;
+        const au9999Data = result.find(item => item.type === "AU99.99");
+        console.log("AU9999 Found:", au9999Data); // 调试：打印找到的项
+        au9999Price = au9999Data ? au9999Data.price : "2000.50";
+        console.log(`AU9999: ¥${au9999Price}/g`);
+      }
     }
     fetchXAU();
   }
@@ -33,21 +43,27 @@ function fetchXAU() {
   $httpClient.get(
     {
       url: "https://api.jisuapi.com/gold/london",
-      headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" },
-      params: { appkey }
+    headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" },
+    params: { appkey }
     },
     function (error, response, data) {
-      console.log("XAU Response:", data); // 调试：打印完整响应
-      if (error || JSON.parse(data).status !== 0) {
-        console.log(`XAU fetch error: ${error || JSON.parse(data).msg}`);
+      console.log("XAU Raw Data:", data); // 调试：打印原始数据
+      if (error) {
+        console.log(`XAU fetch error: ${error}`);
         xauPrice = "2001.75";
       } else {
-        const result = JSON.parse(data).result;
-        console.log("XAU Result:", result); // 调试：打印 result 数组
-        const xauData = result.find(item => item.type === "伦敦金");
-        console.log("XAU Found:", xauData); // 调试：打印找到的项
-        xauPrice = xauData ? xauData.price : "2001.75";
-        console.log(`XAU: $${xauPrice}/oz`);
+        const parsedData = parseData(data);
+        console.log("XAU Parsed Data:", parsedData); // 调试：打印解析后数据
+        if (parsedData.status !== 0) {
+          console.log(`XAU API error: ${parsedData.status}-${parsedData.msg}`);
+          xauPrice = "2001.75";
+        } else {
+          const result = parsedData.result;
+          const xauData = result.find(item => item.type === "伦敦金");
+          console.log("XAU Found:", xauData); // 调试：打印找到的项
+          xauPrice = xauData ? xauData.price : "2001.75";
+          console.log(`XAU: $${xauPrice}/oz`);
+        }
       }
       fetchExchangeRate();
     }
@@ -63,15 +79,22 @@ function fetchExchangeRate() {
       params: { appkey, from: "USD", to: "CNY", amount: "1" }
     },
     function (error, response, data) {
-      console.log("USDCNH Response:", data); // 调试：打印完整响应
-      if (error || JSON.parse(data).status !== 0) {
-        console.log(`USDCNH fetch error: ${error || JSON.parse(data).msg}`);
+      console.log("USDCNH Raw Data:", data); // 调试：打印原始数据
+      if (error) {
+        console.log(`USDCNH fetch error: ${error}`);
         exchangeRate = "7.28";
       } else {
-        const result = JSON.parse(data).result;
-        console.log("USDCNH Result:", result); // 调试：打印 result 对象
-        exchangeRate = result.rate;
-        console.log(`USDCNH: ${exchangeRate}`);
+        const parsedData = parseData(data);
+        console.log("USDCNH Parsed Data:", parsedData); // 调试：打印解析后数据
+        if (parsedData.status !== 0) {
+          console.log(`USDCNH API error: ${parsedData.status}-${parsedData.msg}`);
+          exchangeRate = "7.28";
+        } else {
+          const result = parsedData.result;
+          console.log("USDCNH Result:", result); // 调试：打印 result
+          exchangeRate = result.rate;
+          console.log(`USDCNH: ${exchangeRate}`);
+        }
       }
       finalize();
     }
