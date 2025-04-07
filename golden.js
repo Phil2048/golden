@@ -3,11 +3,6 @@ console.log(`[${$script.name}] Starting at ${$script.startTime}, Type: ${$script
 const appkey = $argument.split("appkey=")[1] || "99ab4e7be6afc6a1";
 let au9999Price, xauPrice, exchangeRate;
 
-// 检查数据是否需要解析
-function parseData(data) {
-  return typeof data === "string" ? JSON.parse(data) : data;
-}
-
 // 获取 AU9999 金价（人民币/克）
 $httpClient.get(
   {
@@ -21,7 +16,7 @@ $httpClient.get(
       console.log(`AU9999 fetch error: ${error}`);
       au9999Price = "2000.50";
     } else {
-      const parsedData = parseData(data);
+      const parsedData = JSON.parse(data);
       console.log("AU9999 Parsed Data:", parsedData); // 调试：打印解析后数据
       if (parsedData.status !== 0) {
         console.log(`AU9999 API error: ${parsedData.status}-${parsedData.msg}`);
@@ -43,8 +38,8 @@ function fetchXAU() {
   $httpClient.get(
     {
       url: "https://api.jisuapi.com/gold/london",
-    headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" },
-    params: { appkey }
+      headers: { "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" },
+      params: { appkey }
     },
     function (error, response, data) {
       console.log("XAU Raw Data:", data); // 调试：打印原始数据
@@ -52,7 +47,7 @@ function fetchXAU() {
         console.log(`XAU fetch error: ${error}`);
         xauPrice = "2001.75";
       } else {
-        const parsedData = parseData(data);
+        const parsedData = JSON.parse(data);
         console.log("XAU Parsed Data:", parsedData); // 调试：打印解析后数据
         if (parsedData.status !== 0) {
           console.log(`XAU API error: ${parsedData.status}-${parsedData.msg}`);
@@ -84,7 +79,7 @@ function fetchExchangeRate() {
         console.log(`USDCNH fetch error: ${error}`);
         exchangeRate = "7.28";
       } else {
-        const parsedData = parseData(data);
+        const parsedData = JSON.parse(data);
         console.log("USDCNH Parsed Data:", parsedData); // 调试：打印解析后数据
         if (parsedData.status !== 0) {
           console.log(`USDCNH API error: ${parsedData.status}-${parsedData.msg}`);
