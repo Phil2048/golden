@@ -3,10 +3,8 @@ desc: 显示AU9999金价（克）、伦敦金（盎司）和离岸金价（克�
 tiles:
   - name: GoldPriceTile
     icon: dollarsign.circle.fill
-    interval: 1080
     backgroundColor: #FFD700
     argument: appkey=99ab4e7be6afc6a1
 script-providers:
   GoldPriceTile:
     url: https://raw.githubusercontent.com/Phil2048/golden/refs/heads/main/golden.js
-    interval: 86400
